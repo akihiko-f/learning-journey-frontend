@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './App.css';
 
-function App() {
-  const [todos,setTodos] =useState([])
-  const [inputValue, setInputValue] =useState("")
+function app() {
+  const [todos, setTodos] = useState(() => {
+    const savedTodos = localStorage.getItem("todos")
+    if (savedTodos) {
+      return JSON.parse(savedTodos)
+    }
+    return []
+  })
+  const [inputValue, setInputValue] = useState("")
 
   const [editingId, setEditingId] = useState(null)
   const [editingText, setEditingText] = useState("")
@@ -40,7 +46,7 @@ function App() {
     setEditingText(text)
   }
 
-  const saveEdit = () => {
+  const saveEdit = (id) => {
     if (editingText.trim() !== "") {
       const newTodos = todos.map((todo) => {
         if (todo.id === editingId) {
@@ -54,10 +60,9 @@ function App() {
     setEditingText("")
   }
 
-  const cancelEdit = () => {
-    setEditingId(null)
-    setEditingText("")
-  }
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos))
+  }, [todos])
 
   return (
     <div className="todo-container">
@@ -85,11 +90,11 @@ function App() {
             {editingId === todo.id ? (
               <>
                 <input
-                type="text"
-                className="todo-input"
-                value={editingText}
-                onChange={(e) => setEditingText(e.target.value)}
-                autoFocus
+                  type="text"
+                  className="todo-input"
+                  value={editingText}
+                  onChange={(e) => setEditingText(e.target.value)}
+                  autoFocus
                 />
                 <button className="save-button" onClick={saveEdit}>
                   保存
@@ -124,4 +129,4 @@ function App() {
   )
 }
 
-export default App;
+export default app;

@@ -10,6 +10,7 @@
 - [Day 2 - 2025/10/16 (Session 2)](./learning-journey/2025-10-16-session2.md) - CSS/スタイリング
 - [Day 3 - 2025/10/18](./learning-journey/2025-10-18.md) - オブジェクト配列、チェックボックス
 - [Day 4 - 2025/10/19](./learning-journey/2025-10-19.md) - 編集機能、条件付きレンダリング
+- [Day 5 - 2025/10/20](./learning-journey/2025-10-20.md) - LocalStorage、useEffect
 
 ## 🚀 実装した機能
 
@@ -19,6 +20,7 @@
 - ✅ 完了/未完了チェックボックス
 - ✅ 完了時の取り消し線スタイル
 - ✅ 入力バリデーション（空のToDoは追加不可）
+- ✅ LocalStorageでデータ永続化（ページリロード後もデータが残る）
 - ✅ Unit Test（5個のテストケース）
 - ✅ Storybook（4つのストーリー）
 - ✅ CSS/スタイリング（Flexbox、ホバーエフェクト）
@@ -117,7 +119,7 @@ npm run storybook
 
 ---
 
-#### 🔜 2. ToDoの編集機能【次回】
+#### ✅ 2. ToDoの編集機能
 **学習内容：**
 - 条件付きレンダリング（編集モード切り替え）
 - フォームのstate管理
@@ -130,7 +132,7 @@ npm run storybook
 
 ---
 
-#### 3. LocalStorageでデータ永続化
+#### ✅ 3. LocalStorageでデータ永続化
 **学習内容：**
 - useEffectフックの基礎
 - LocalStorageのAPI
@@ -142,7 +144,7 @@ npm run storybook
 
 ---
 
-#### 4. フィルター機能（全て/未完了/完了）
+#### 🔜 4. フィルター機能（全て/未完了/完了）【次回】
 **学習内容：**
 - 配列のfilterメソッド応用
 - タブUIの実装
