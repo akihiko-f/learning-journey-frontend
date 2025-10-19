@@ -120,3 +120,64 @@
   color: #999;
   opacity: 0.6;
 }
+
+.edit-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  background-color: #2196F3;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+  margin-right: 0.5rem;
+}
+
+.edit-button:hover {
+  background-color: #0b7dda
+}
+
+.edit-button:active {
+  transform: scale(0.95);
+}
+
+.save-button {
+  padding:0.5rem 1rem;
+  font-weight: 500;
+  color: white;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+  margin-right: 0.5rem;
+}
+
+.save-button:hover {
+  background-color: #45a049;
+}
+
+.save-button:active {
+  transform: scale(0.95);
+}
+
+.cancel-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  background-color: #9E9E9E;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+.cancel-button:hover {
+  background-color: #757575;
+}
+
+.cancel-button:active {
+  transform: scale(0.95);
+}
