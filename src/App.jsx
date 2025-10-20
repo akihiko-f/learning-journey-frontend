@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import './App.css';
 
-function app() {
+function App() {
   const [todos, setTodos] = useState(() => {
     const savedTodos = localStorage.getItem("todos")
     if (savedTodos) {
@@ -13,6 +13,8 @@ function app() {
 
   const [editingId, setEditingId] = useState(null)
   const [editingText, setEditingText] = useState("")
+
+  const [filter, setFilter] = useState("all")
 
   const addTodo = () => {
     if (inputValue.trim() !== "") {
@@ -46,7 +48,7 @@ function app() {
     setEditingText(text)
   }
 
-  const saveEdit = (id) => {
+  const saveEdit = () => {
     if (editingText.trim() !== "") {
       const newTodos = todos.map((todo) => {
         if (todo.id === editingId) {
@@ -60,9 +62,26 @@ function app() {
     setEditingText("")
   }
 
+  const cancelEdit = () => {
+    setEditingId(null)
+    setEditingText("")
+  }
+
+  const getFilteredTodos = () => {
+    if (filter === "active") {
+      return todos.filter((todo) => !todo.completed)
+    }
+    if (filter === "completed") {
+      return todos.filter((todo) => todo.completed)
+    }
+    return todos
+  }
+
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos))
   }, [todos])
+
+  const filteredTodos = getFilteredTodos()
 
   return (
     <div className="todo-container">
@@ -70,19 +89,39 @@ function app() {
       <div className="input-area">
         <input
           type="text"
-          className="todo-input"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="やることを入力"
         />
       </div>
       <button className="add-button" onClick={addTodo}>追加</button>
+
+      <div className="filter-tabs">
+        <button
+          className={`filter-tab ${filter === "all" ? "active" : ""}`}
+          onClick={() => setFilter("all")}
+        >
+          全て
+        </button>
+        <button
+          className={`filter-tab ${filter === "active" ? "active" : ""}`}
+          onClick={() => setFilter("active")}
+        >
+          未完了
+        </button>
+        <button
+          className={`filter-tab ${filter === "completed" ? "completed" : ""}`}
+          onClick={() => setFilter("completed")}
+        >
+          完了
+        </button>
+      </div>
+
       <ul className="todo-list">
-        {todos.map((todo) => (
+        {filteredTodos.map((todo) => (
           <li key={todo.id} className="todo-item">
             <input
               type="checkbox"
-              className="todo-checkbox"
               checked={todo.completed}
               onChange={() => toggleTodo(todo.id)}
             />
@@ -105,7 +144,7 @@ function app() {
               </>
             ) : (
               <>
-                <span className={`todo-text ${todo.completed ? 'completed' : ''}`}>
+                <span className={`todo-text ${todo.completed ? "completed" : ""}`}>
                   {todo.text}
                 </span>
                 <button
@@ -129,4 +168,4 @@ function app() {
   )
 }
 
-export default app;
+export default App;
