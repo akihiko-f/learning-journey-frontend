@@ -1,5 +1,8 @@
-import { useState, useEffect } from "react";
-import './App.css';
+import { useState, useEffect } from "react"
+import './App.css'
+import TodoForm from './components/TodoForm'
+import FilterTabs from './components/FilterTabs'
+import TodoList from './components/TodoList'
 
 function App() {
   const [todos, setTodos] = useState(() => {
@@ -36,7 +39,7 @@ function App() {
   const toggleTodo = (id) => {
     const newTodos = todos.map((todo) => {
       if (todo.id === id) {
-        return {...todo, completed: !todo.completed}
+        return { ...todo, completed: !todo.completed}
       }
       return todo
     })
@@ -52,7 +55,7 @@ function App() {
     if (editingText.trim() !== "") {
       const newTodos = todos.map((todo) => {
         if (todo.id === editingId) {
-          return {...todo, text: editingText}
+          return { ...todo, text: editingText }
         }
         return todo
       })
@@ -86,86 +89,31 @@ function App() {
   return (
     <div className="todo-container">
       <h1>ToDoリスト</h1>
-      <div className="input-area">
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="やることを入力"
-        />
-      </div>
-      <button className="add-button" onClick={addTodo}>追加</button>
 
-      <div className="filter-tabs">
-        <button
-          className={`filter-tab ${filter === "all" ? "active" : ""}`}
-          onClick={() => setFilter("all")}
-        >
-          全て
-        </button>
-        <button
-          className={`filter-tab ${filter === "active" ? "active" : ""}`}
-          onClick={() => setFilter("active")}
-        >
-          未完了
-        </button>
-        <button
-          className={`filter-tab ${filter === "completed" ? "completed" : ""}`}
-          onClick={() => setFilter("completed")}
-        >
-          完了
-        </button>
-      </div>
+      <TodoForm
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        addTodo={addTodo}
+      />
 
-      <ul className="todo-list">
-        {filteredTodos.map((todo) => (
-          <li key={todo.id} className="todo-item">
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleTodo(todo.id)}
-            />
+      <FilterTabs
+        filter={filter}
+        setFilter={setFilter}
+      />
 
-            {editingId === todo.id ? (
-              <>
-                <input
-                  type="text"
-                  className="todo-input"
-                  value={editingText}
-                  onChange={(e) => setEditingText(e.target.value)}
-                  autoFocus
-                />
-                <button className="save-button" onClick={saveEdit}>
-                  保存
-                </button>
-                <button className="cancel-button" onClick={cancelEdit}>
-                  キャンセル
-                </button>
-              </>
-            ) : (
-              <>
-                <span className={`todo-text ${todo.completed ? "completed" : ""}`}>
-                  {todo.text}
-                </span>
-                <button
-                  className="edit-button"
-                  onClick={() => startEdit(todo.id, todo.text)}
-                >
-                  編集
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => deleteTodo(todo.id)}
-                >
-                  削除
-                </button>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+      <TodoList
+        filteredTodos={filteredTodos}
+        editingId={editingId}
+        editingText={editingText}
+        setEditingText={setEditingText}
+        toggleTodo={toggleTodo}
+        startEdit={startEdit}
+        saveEdit={saveEdit}
+        cancelEdit={cancelEdit}
+        deleteTodo={deleteTodo}
+      />
     </div>
   )
 }
 
-export default App;
+export default App
