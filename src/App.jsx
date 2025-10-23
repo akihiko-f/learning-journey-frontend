@@ -86,6 +86,11 @@ function App() {
 
   const filteredTodos = getFilteredTodos()
 
+  // タイマーアプリのState管理
+  const [time, settingTime] = useState(0)
+  const [elapsedTime, setElapsedTime] = useState(0)
+  const [isRunning, setIsRunning] = useState(false)
+
   return (
     <div className="todo-container">
       <h1>ToDoリスト</h1>
