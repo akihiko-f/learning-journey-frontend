@@ -91,6 +91,38 @@ function App() {
   const [elapsedTime, setElapsedTime] = useState(0)
   const [isRunning, setIsRunning] = useState(false)
 
+  const pushStart = () => {
+    setIsRunning(true)
+  }
+
+  const pushStop = () => {
+    setIsRunning(false)
+  }
+
+  const resetTimer = () => {
+    setIsRunning(false)
+    setElapsedTime(0)
+  }
+
+  useEffect(() => {
+    let timerId
+    if (isRunning) {
+      timerId = setInterval(() => {
+        setElapsedTime((prevTime) => {
+          if (prevTime > 1) {
+            return prevTime - 1
+          } else {
+            setIsRunning(false)
+            return 0
+          }
+        })
+      } , 1000)
+    }
+    return () => {
+      clearInterval(timerId)
+    }
+  }, [isRunning])
+
   return (
     <div className="todo-container">
       <h1>ToDoリスト</h1>
