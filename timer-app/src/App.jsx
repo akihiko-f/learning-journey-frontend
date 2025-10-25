@@ -4,11 +4,16 @@ import Timer from './components/Timer'
 
 function App() {
   // タイマーアプリのState管理
-  const [time, settingTime] = useState(0)
+  const [minutes, setMinutes] = useState(0)
+  const [seconds, setSeconds] = useState(0)
   const [elapsedTime, setElapsedTime] = useState(0)
   const [isRunning, setIsRunning] = useState(false)
 
   const pushStart = () => {
+    if (elapsedTime === 0) {
+      const totalSeconds = minutes * 60 + seconds
+      setElapsedTime(totalSeconds)
+    }
     setIsRunning(true)
   }
 
@@ -49,8 +54,12 @@ function App() {
       <h1>カウントダウンタイマー</h1>
 
       <Timer
-        settingTime={settingTime}
+        minutes={minutes}
+        seconds={seconds}
+        setMinutes={setMinutes}
+        setSeconds={setSeconds}
         elapsedTime={elapsedTime}
+        isRunning={isRunning}
         pushStart={pushStart}
         pushStop={pushStop}
         resetTimer={resetTimer}

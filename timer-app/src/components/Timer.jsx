@@ -1,30 +1,58 @@
 function Timer({
-    settingTime,
+    minutes,
+    seconds,
+    setMinutes,
+    setSeconds,
     elapsedTime,
+    isRunning,
     pushStart,
     pushStop,
     resetTimer
 }) {
-    // TODO: elapsedTimeを「MM:SS」形式で表示する関数を作る（例: 05:30）
-    // 例: const formatTime = (seconds) => { ... }
-
-    // TODO: elapsedTime === 0 の時に「時間切れ！」と表示する判定を作る
+    const formatTime = (totalSeconds) => {
+        const mins = Math.floor(totalSeconds / 60)
+        const secs = totalSeconds % 60
+        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+    }
 
     return (
             <div className="timer-container">
                 <h2 className="timer-title">タイマー</h2>
 
-                {/* TODO: ここに時間設定の入力欄（分・秒）を追加 */}
+                <div className="timer-input">
+                    <div className="input-group">
+                        <label>分</label>
+                        <input
+                            type="number"
+                            min="0"
+                            max="59"
+                            value={minutes}
+                            onChange={(e) => setMinutes(Number(e.target.value))}
+                            disabled={isRunning}
+                        />
+                    </div>
+                    <div className="input-group">
+                        <label>秒</label>
+                        <input
+                            type="number"
+                            min="0"
+                            max="59"
+                            value={seconds}
+                            onChange={(e) => setSeconds(Number(e.target.value))}
+                            disabled={isRunning}
+                        />
+                    </div>
+                </div>
 
-                <div className="timer-display">{elapsedTime}</div>
-
-                {/* TODO: elapsedTimeをMM:SS形式に変換して表示 */}
+                <div className="timer-display">{formatTime(elapsedTime)}</div>
+                {elapsedTime === 0 && !isRunning && (
+                    <div className="timeout-message">時間切れ！</div>
+                )}
 
                 <button className="timer-button start-button" onClick={pushStart}>開始</button>
                 <button className="timer-button stop-button" onClick={pushStop}>停止</button>
                 <button className="timer-button reset-button" onClick={resetTimer}>リセット</button>
 
-                {/* TODO: 時間切れメッセージを表示 */}
             </div>
     )
 }
