@@ -10,7 +10,11 @@ learning-journey-frontend/
 │   ├── src/
 │   ├── package.json
 │   └── vite.config.js
-├── timer-app/             # カウントダウンタイマー（Phase 2-1）
+├── timer-app/             # カウントダウンタイマー（Phase 2-1完了）
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.js
+├── free-practice-app/     # 自由練習用アプリ（学習スケジュール外）
 │   ├── src/
 │   ├── package.json
 │   └── vite.config.js
@@ -20,6 +24,10 @@ learning-journey-frontend/
 ```
 
 各アプリは完全に独立したプロジェクトです。
+
+**free-practice-app について:**
+- 学習スケジュールとは別に、自由に実験・練習するためのアプリ
+- 写経なしで、イメージしたものを少しずつコードにしていく
 
 ### 起動方法
 
@@ -31,6 +39,11 @@ npm run dev
 
 # Timerアプリを起動
 cd timer-app
+npm install  # 初回のみ
+npm run dev
+
+# 自由練習用アプリを起動
+cd free-practice-app
 npm install  # 初回のみ
 npm run dev
 ```
