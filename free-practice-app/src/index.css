@@ -1,16 +1,39 @@
-header img{
-  display: flex;
-  justify-content: left;
-  width: 100px;
+body {
   margin: 0;
   padding: 0;
+  background-color: black;
 }
 
-header ul{
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: black;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 100;
+}
+
+header div {
   display: flex;
-  justify-content: right;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  position: relative;
+}
+
+header img {
+  position: absolute;
+  left: 20px;
+  width: 100px;
+  margin: 0;
+}
+
+header ul {
+  display: flex;
   gap: 20px;
   list-style: none;
   margin: 0;
   padding: 0;
+  color: white;
 }

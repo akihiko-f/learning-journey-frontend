@@ -6,10 +6,10 @@ function Header() {
             <div>
                 <img src={logo} alt="ロゴ" />
                 <ul>
-                    <li>ホーム</li>
-                    <li>会社概要</li>
-                    <li>プロダクト</li>
-                    <li>問い合わせ先</li>
+                    <li>Home</li>
+                    <li>About us</li>
+                    <li>Service</li>
+                    <li>Contact</li>
                 </ul>
             </div>
         </header>
