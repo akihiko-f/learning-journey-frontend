@@ -80,9 +80,58 @@ footer li {
   width: 100%;
 }
 
+.hero {
+  padding: 150px 20px 100px 20px;
+  text-align: center;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero h1 {
+  font-size: 56px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  font-size: 20px;
+  margin-bottom: 15px;
+  opacity: 0.8;
+  max-width: 600px;
+}
+
+.hero button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 48px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 20px;
+}
+
+.hero button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+
 .feature-section {
   padding: 100px 20px;
   text-align: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 80px 0;
 }
 
 .carousel {
@@ -190,6 +239,44 @@ footer li {
 
 .pricing-cards button:hover {
   background-color: #4a9eff;
+  color: white;
+  transform: scale(1.05);
+}
+
+.cta-section {
+  padding: 100px 20px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 80px 0;
+}
+
+.cta-section h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.cta-section p {
+  font-size: 18px;
+  margin-bottom: 40px;
+  opacity: 0.8;
+}
+
+.cta-section button {
+  background-color: white;
+  color: black;
+  border: 2px solid white;
+  border-radius: 8px;
+  padding: 16px 48px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cta-section button:hover {
+  background-color: transparent;
   color: white;
   transform: scale(1.05);
 }

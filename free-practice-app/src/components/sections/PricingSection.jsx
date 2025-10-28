@@ -10,6 +10,7 @@ function PricingSection() {
                     <ul>
                         <li>基本機能</li>
                         <li>1プロジェクト</li>
+                        <li>サポートなし</li>
                     </ul>
                     <button>始める</button>
                 </div>
