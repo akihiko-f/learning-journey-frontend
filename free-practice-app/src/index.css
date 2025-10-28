@@ -29,7 +29,7 @@ header div {
 header img {
   position: absolute;
   left: 20px;
-  width: 100px;
+  width: 150px;
   margin: 0;
 }
 
@@ -119,4 +119,77 @@ footer li {
 .carousel-btn:hover {
   background-color: rgba(255, 255, 255,0.2);
   transform: scale(1.1);
+}
+
+.pricing-section {
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.pricing-section h2 {
+  font-size: 36px;
+  margin-bottom: 50px;
+}
+
+.pricing-cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 40px 30px;
+  width: 100%;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.pricing-cards:hover {
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+}
+
+.pricing-cards h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.pricing-cards .price {
+  font-size: 36px;
+  font-weight: hold;
+  margin: 20px 0;
+  color: #4a9eff;
+}
+
+.pricing-cards ul {
+  list-style: none;
+  padding: 0;
+  margin: 30px 0;
+  text-align: left;
+}
+
+.pricing-cards li {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pricing-cards li:last-child {
+  border-bottom: none;
+}
+
+.pricing-cards button {
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 40px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 20px;
+}
+
+.pricing-cards button:hover {
+  background-color: #4a9eff;
+  color: white;
+  transform: scale(1.05);
 }
