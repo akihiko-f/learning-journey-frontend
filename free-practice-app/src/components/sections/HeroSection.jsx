@@ -1,9 +1,10 @@
 function HeroSection() {
     return(
         <section className="hero">
-            <h1>あなたのビジネスを加速させる</h1>
-            <p>シンプルで使いやすいツールで、作業時間を50%削減</p>
-            <button>無料で始める</button>
+            <h1>React学習プロジェクト</h1>
+            <p>React/Viteを使用したランディングページのデモ</p>
+            <p>※学習・ポートフォリオ目的のサンプルサイトです</p>
+            <button>GitHubを見る</button>
         </section>
     )
 }
