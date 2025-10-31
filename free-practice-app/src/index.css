@@ -280,3 +280,20 @@ footer li {
   color: white;
   transform: scale(1.05);
 }
+
+.page-container {
+  padding: 150px 20px 100px 20px;
+  min-height: 80vh;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-container h1 {
+  font-size: 42px;
+  margin-bottom: 30px;
+}
+
+.page-container p {
+  font-size: 18px;
+  line-height: 1.8;
+}
