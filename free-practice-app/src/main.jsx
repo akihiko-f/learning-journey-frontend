@@ -13,7 +13,7 @@ import Terms from './pages/Terms.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/learning-journey-frontend">
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<Home />} />
