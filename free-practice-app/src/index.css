@@ -42,6 +42,35 @@ header ul {
   color: white;
 }
 
+header a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 8px 0;
+}
+
+header a:hover {
+  color: #667eea;
+}
+
+header a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: width 0.3s ease;
+}
+
+header a:hover::after {
+  width: 100%;
+}
+
 footer {
   bottom: 0;
   left: 0;
@@ -106,7 +135,7 @@ footer li {
   max-width: 600px;
 }
 
-.hero button {
+.hero-button {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
@@ -117,9 +146,11 @@ footer li {
   cursor: pointer;
   transition: all 0.3s;
   margin-top: 20px;
+  text-decoration: none;
+  display: inline-block;
 }
 
-.hero button:hover {
+.hero-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
 }
@@ -263,7 +294,7 @@ footer li {
   opacity: 0.8;
 }
 
-.cta-section button {
+.cta-button {
   background-color: white;
   color: black;
   border: 2px solid white;
@@ -273,9 +304,11 @@ footer li {
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
 }
 
-.cta-section button:hover {
+.cta-button:hover {
   background-color: transparent;
   color: white;
   transform: scale(1.05);

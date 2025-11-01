@@ -4,7 +4,14 @@ function HeroSection() {
             <h1>React学習プロジェクト</h1>
             <p>React/Viteを使用したランディングページのデモ</p>
             <p>※学習・ポートフォリオ目的のサンプルサイトです</p>
-            <button>GitHubを見る</button>
+            <a
+                href="https://github.com/akihiko-f/learning-journey-frontend"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hero-button"
+            >
+                GitHubを見る
+            </a>
         </section>
     )
 }
