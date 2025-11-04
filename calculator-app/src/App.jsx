@@ -6,6 +6,7 @@ function App() {
   const [firstValue, setFirstValue] = useState(null)
   const [operator, setOperator] = useState(null)
   const [shouldResetDisplay, setShouldResetDisplay] = useState(false)
+  const [history, setHistory] = useState([])
 
   const buttons = [7, 8 , 9, '/', 4, 5, 6, '*', 1, 2, 3, '-', 0, 'C', '=', '+']
 
@@ -37,6 +38,10 @@ function App() {
     if (firstValue !== null && operator) {
       const currentValue = parseFloat(display)
       const result = calculate(firstValue, currentValue,operator)
+
+      const calculation = `${firstValue} ${operator} ${currentValue} = ${result}`
+      setHistory([...history, calculation])
+
       setDisplay(String(result))
       setFirstValue(null)
       setOperator(null)
@@ -89,6 +94,19 @@ function App() {
               {btn}
             </button>
           ))}
+      </div>
+
+      <div className="history">
+        <h2>計算機能</h2>
+        {history.length === 0 ? (
+          <p className="no-history">履歴がありません</p>
+        ) : (
+          <ul>
+          {history.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+          </ul>
+        )}
       </div>
     </div>
   )
