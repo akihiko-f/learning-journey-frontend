@@ -14,6 +14,18 @@ learning-journey-frontend/
 │   ├── src/
 │   ├── package.json
 │   └── vite.config.js
+├── calculator-app/        # 簡易計算機（Phase 2-2完了）
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.js
+├── favorites-app/         # お気に入りリスト（Phase 2-3完了）
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.js
+├── memo-app/              # メモアプリ（Phase 3-1完了）
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.js
 ├── free-practice-app/     # 自由練習用アプリ（学習スケジュール外）
 │   ├── src/
 │   ├── package.json
@@ -66,6 +78,7 @@ npm run dev
 - [Day 10 - 2025/11/04](./learning-journey/2025-11-04.md) - 計算履歴機能、イミュータブル更新
 - [Day 11 - 2025/11/05](./learning-journey/2025-11-05.md) - プロジェクト管理、お気に入りリスト開始
 - [Day 12 - 2025/11/07](./learning-journey/2025-11-07.md) - お気に入りリスト完成、知識の統合
+- [Day 13 - 2025/11/08](./learning-journey/2025-11-08.md) - メモアプリ完成、検索機能、CSSスタイリング
 
 ## 🚀 実装した機能
 
@@ -106,6 +119,15 @@ npm run dev
 - ✅ レスポンシブなUIデザイン
 - ✅ Flexboxレイアウト
 - ✅ ホバーエフェクトとアニメーション
+
+### メモアプリ（Phase 3-1完了）
+- ✅ メモの作成（タイトル・本文）
+- ✅ メモの編集（編集モードと新規作成モードの切り替え）
+- ✅ メモの削除
+- ✅ 作成日時の表示（ISO形式から読みやすい形式に変換）
+- ✅ LocalStorageでデータ永続化
+- ✅ 検索機能（タイトル・本文から検索）
+- ✅ CSSスタイリング
 
 ## 🛠️ 技術スタック
 
@@ -297,7 +319,7 @@ npm run storybook
 
 より複雑な機能を持つアプリケーションを、サンプルコードを参考に実装する。
 
-#### お題4: メモアプリ
+#### ✅ お題4: メモアプリ
 - メモの作成・編集・削除
 - タイトルと本文
 - 作成日時の表示
@@ -305,6 +327,8 @@ npm run storybook
 - 検索機能
 
 **学習内容：** より複雑なCRUD操作
+
+**完了日：** 2025/11/08
 
 ---
 
