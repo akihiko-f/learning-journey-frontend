@@ -13,9 +13,64 @@ function App(){
   const expenseCategories = ['食費', '交通費', '娯楽', '光熱費', '通信費', 'その他']
   const incomeCategories = ['給与', '副業', 'お小遣い', 'その他']
 
+  const handleAddTransaction = () => {
+    if (!amount || !date){
+      alert('金額と日付を入力してください')
+      return
+    }
+
+    if (Number(amount) <= 0) {
+      alert('金額は0より大きい値を入力してください')
+      return
+    }
+
+    const newTransaction = {
+      id: Date.now(),
+      type: type,
+      category: category,
+      amount: Number(amount),
+      description: description,
+      date: date
+    }
+
+    setTransactions([newTransaction, ...transactions])
+
+    setAmount('')
+    setDescription('')
+    setDate('')
+  }
+
+  const handleDeleteTransaction = (id) => {
+    setTransactions(transactions.filter(t => t.id !== id))
+  }
+
+  const totalIncome = transactions
+    .filter(t => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0)
+
+  const totalExpense = transactions
+    .filter(t => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0)
+
+  const balance = totalIncome - totalExpense
   return (
     <div className="app">
       <h1>家計簿アプリ</h1>
+
+      <div className="summary">
+        <div className="summary-item income">
+          <div className="summary-label">収入</div>
+          <div className="summary-amount">+{totalIncome.toLocaleString()}円</div>
+        </div>
+        <div className="summary-item expense">
+          <div className="summary-label">支出</div>
+          <div className="summary-amount">-{totalExpense.toLocaleString()}円</div>
+        </div>
+        <div className="summary-item balance">
+          <div className="summary-label">残高</div>
+          <div className="summary-amount">{balance.toLocaleString()}円</div>
+        </div>
+      </div>
 
       <div className="form">
         <h2>取引を追加</h2>
@@ -67,11 +122,41 @@ function App(){
           />
         </div>
 
-        <button className="add-button">追加</button>
+        <button
+          className="add-button"
+          onClick={handleAddTransaction}
+        >
+          追加
+        </button>
       </div>
       <div className="transactions">
         <h2>取引履歴</h2>
-        <p>取引がありません</p>
+        {transactions.length === 0 ? (
+          <p>取引がありません</p>
+        ) : (
+          transactions.map(transaction => (
+            <div
+              key={transactions.id}
+              className={`transaction-item ${transaction.type}`}
+            >
+              <div className="transaction-info">
+                <div className="transaction-date">{transaction.date}</div>
+                <div className="transaction-category">{transaction.category}</div>
+                <div className="transaction-description">{transaction.description}</div>
+              </div>
+              <div className="transaction-amount">
+                {transaction.type === 'income' ? '+' : '-'}
+                {transaction.amount.toLocaleString()}円
+              </div>
+              <button
+                className="delete-button"
+                onClick={() => handleDeleteTransaction(transaction.id)}
+              >
+                削除
+              </button>
+            </div>
+          ))
+        )}
       </div>
     </div>
   )
