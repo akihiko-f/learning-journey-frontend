@@ -10,6 +10,8 @@ function App(){
 
   const [transactions, setTransactions] = useState([])
 
+  const [selectedMonth, setSelectedMonth] = useState('')
+
   const expenseCategories = ['食費', '交通費', '娯楽', '光熱費', '通信費', 'その他']
   const incomeCategories = ['給与', '副業', 'お小遣い', 'その他']
 
@@ -44,18 +46,37 @@ function App(){
     setTransactions(transactions.filter(t => t.id !== id))
   }
 
-  const totalIncome = transactions
+  const filteredTransactions = selectedMonth
+    ? transactions.filter(t => t.date.startsWith(selectedMonth))
+    : transactions
+
+  const totalIncome = filteredTransactions
     .filter(t => t.type === 'income')
     .reduce((sum, t) => sum + t.amount, 0)
 
-  const totalExpense = transactions
+  const totalExpense = filteredTransactions
     .filter(t => t.type === 'expense')
     .reduce((sum, t) => sum + t.amount, 0)
 
   const balance = totalIncome - totalExpense
+
   return (
     <div className="app">
       <h1>家計簿アプリ</h1>
+
+      <div className="month-selector">
+        <label>表示する月:</label>
+        <input
+          type="month"
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value)}
+        />
+        {selectedMonth && (
+          <button onClick={() => setSelectedMonth('')}>
+            全期間を表示
+          </button>
+        )}
+      </div>
 
       <div className="summary">
         <div className="summary-item income">
@@ -134,7 +155,7 @@ function App(){
         {transactions.length === 0 ? (
           <p>取引がありません</p>
         ) : (
-          transactions.map(transaction => (
+          filteredTransactions.map(transaction => (
             <div
               key={transactions.id}
               className={`transaction-item ${transaction.type}`}
