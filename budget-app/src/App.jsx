@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import './App.css'
 
 function App(){
@@ -8,12 +8,19 @@ function App(){
   const [description, setDescription] = useState('')
   const [date, setDate] = useState('')
 
-  const [transactions, setTransactions] = useState([])
+  const [transactions, setTransactions] = useState(() => {
+    const savedTransactions = localStorage.getItem('transactions')
+    return savedTransactions ? JSON.parse(savedTransactions) : []
+  })
 
   const [selectedMonth, setSelectedMonth] = useState('')
 
   const expenseCategories = ['食費', '交通費', '娯楽', '光熱費', '通信費', 'その他']
   const incomeCategories = ['給与', '副業', 'お小遣い', 'その他']
+
+  useEffect(() => {
+    localStorage.setItem('transactions', JSON.stringify(transactions))
+  }, [transactions])
 
   const handleAddTransaction = () => {
     if (!amount || !date){
