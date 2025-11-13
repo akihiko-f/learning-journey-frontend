@@ -9,8 +9,13 @@ function App(){
   const [date, setDate] = useState('')
 
   const [transactions, setTransactions] = useState(() => {
-    const savedTransactions = localStorage.getItem('transactions')
-    return savedTransactions ? JSON.parse(savedTransactions) : []
+    try {
+      const savedTransactions = localStorage.getItem('transactions')
+      return savedTransactions ? JSON.parse(savedTransactions) : []
+    } catch (error) {
+      console.error('LocalStorageからのデータ読み込みに失敗しました:', error)
+      return []
+    }
   })
 
   const [selectedMonth, setSelectedMonth] = useState('')
