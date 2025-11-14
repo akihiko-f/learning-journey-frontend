@@ -72,6 +72,15 @@ function App(){
 
   const balance = totalIncome - totalExpense
 
+  const expenseByCategoryData = expenseCategories.map(cat => {
+    const total = filteredTransactions
+      .filter(t => t.type === 'expense' && t.category === cat)
+      .reduce((sum, t) => sum + t.amount, 0)
+    return { category: cat, amount: total }
+  })
+
+  const maxExpense = Math.max(...expenseByCategoryData.map(d => d.amount), 1)
+
   return (
     <div className="app">
       <h1>家計簿アプリ</h1>
@@ -161,6 +170,40 @@ function App(){
         >
           追加
         </button>
+      </div>
+      <div className="charts">
+        <h2>カテゴリ別支出</h2>
+        <div className="category-chart">
+          {expenseByCategoryData.map(item => (
+            <div key={item.category} className="chart-row">
+              <div className="chart-label">{item.category}</div>
+              <div className="chart-bar-container">
+                <div
+                  className="chart-bar"
+                  style={{ width: `${(item.amount / maxExpense) * 100}%` }}
+                >
+                  <span className="chart-amount">
+                    {item.amount > 0 ? `${item.amount.toLocaleString()}円` : ''}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <h2>収入・支出比較</h2>
+        <div className="comparison-chart">
+          <div className="bar-group">
+            <div className="bar income-bar" style={{ height: `${totalIncome > 0 ? (totalIncome /              
+            Math.max(totalIncome, totalExpense)) * 200 : 0}px` }}>
+              <span className="bar-label">収入</span>
+              <span className="bar-amount">{totalIncome.toLocaleString()}円</span>
+            </div>
+          </div>
+          <div className="bar-group">
+            <div className="bar expense-bar" style={{ height: `$`}}
+          </div>
+        </div>
       </div>
       <div className="transactions">
         <h2>取引履歴</h2>
