@@ -201,7 +201,11 @@ function App(){
             </div>
           </div>
           <div className="bar-group">
-            <div className="bar expense-bar" style={{ height: `$`}}
+            <div className="bar expense-bar" style={{ height: `${totalExpense > 0 ? (totalExpense /
+            Math.max(totalIncome, totalExpense)) * 200 : 0}px` }}>
+              <span className="bar-label">支出</span>
+              <span className="bar-amount">{totalExpense.toLocaleString()}円</span>
+            </div>
           </div>
         </div>
       </div>

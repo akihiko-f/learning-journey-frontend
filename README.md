@@ -5,31 +5,16 @@
 ## 📁 プロジェクト構成
 
 ```
-learning-journey-frontend/
-├── todo-app/              # ToDoアプリ（Phase 1完了）
-│   ├── src/
-│   ├── package.json
-│   └── vite.config.js
-├── timer-app/             # カウントダウンタイマー（Phase 2-1完了）
-│   ├── src/
-│   ├── package.json
-│   └── vite.config.js
-├── calculator-app/        # 簡易計算機（Phase 2-2完了）
-│   ├── src/
-│   ├── package.json
-│   └── vite.config.js
-├── favorites-app/         # お気に入りリスト（Phase 2-3完了）
-│   ├── src/
-│   ├── package.json
-│   └── vite.config.js
-├── memo-app/              # メモアプリ（Phase 3-1完了）
-│   ├── src/
-│   ├── package.json
-│   └── vite.config.js
-├── free-practice-app/     # 自由練習用アプリ（学習スケジュール外）
-│   ├── src/
-│   ├── package.json
-│   └── vite.config.js
+learning-journey/
+├── frontend/              # フロントエンドアプリ
+│   ├── todo-app/          # ToDoアプリ（Phase 1完了）
+│   ├── timer-app/         # カウントダウンタイマー（Phase 2-1完了）
+│   ├── calculator-app/    # 簡易計算機（Phase 2-2完了）
+│   ├── favorites-app/     # お気に入りリスト（Phase 2-3完了）
+│   ├── memo-app/          # メモアプリ（Phase 3-1完了）
+│   ├── budget-app/        # 家計簿アプリ（Phase 3-2完了）
+│   └── free-practice-app/ # 自由練習用アプリ
+├── backend/               # バックエンド（今後の拡張用）
 ├── assignments/           # お題の仕様書
 ├── learning-journey/      # 学習記録
 └── README.md
@@ -45,18 +30,13 @@ learning-journey-frontend/
 ### 起動方法
 
 ```bash
-# ToDoアプリを起動
-cd todo-app
+# 各アプリを起動
+cd frontend/<app-name>
 npm install  # 初回のみ
 npm run dev
 
-# Timerアプリを起動
-cd timer-app
-npm install  # 初回のみ
-npm run dev
-
-# 自由練習用アプリを起動
-cd free-practice-app
+# 例: 家計簿アプリを起動
+cd frontend/budget-app
 npm install  # 初回のみ
 npm run dev
 ```
@@ -65,20 +45,7 @@ npm run dev
 
 日々の学習記録は [`learning-journey/`](./learning-journey) ディレクトリに保存されています。
 
-- [Day 1 - 2025/10/16](./learning-journey/2025-10-16.md) - React基礎、テスト
-- [Day 2 - 2025/10/16 (Session 2)](./learning-journey/2025-10-16-session2.md) - CSS/スタイリング
-- [Day 3 - 2025/10/18](./learning-journey/2025-10-18.md) - オブジェクト配列、チェックボックス
-- [Day 4 - 2025/10/19](./learning-journey/2025-10-19.md) - 編集機能、条件付きレンダリング
-- [Day 5 - 2025/10/20](./learning-journey/2025-10-20.md) - LocalStorage、useEffect
-- [Day 5 - 2025/10/20 (Session 2)](./learning-journey/2025-10-20-session2.md) - フィルター機能、タブUI
-- [Day 6 - 2025/10/21](./learning-journey/2025-10-21.md) - コンポーネント分割、Props
-- [Day 7 - 2025/10/25](./learning-journey/2025-10-25.md) - プロジェクト構成変更、カウントダウンタイマー
-- [Day 8 - 2025/11/02](./learning-journey/2025-11-02.md) - 学習計画変更、計算機プロジェクト開始
-- [Day 9 - 2025/11/03](./learning-journey/2025-11-03.md) - 計算機実装（配列+map、四則演算）
-- [Day 10 - 2025/11/04](./learning-journey/2025-11-04.md) - 計算履歴機能、イミュータブル更新
-- [Day 11 - 2025/11/05](./learning-journey/2025-11-05.md) - プロジェクト管理、お気に入りリスト開始
-- [Day 12 - 2025/11/07](./learning-journey/2025-11-07.md) - お気に入りリスト完成、知識の統合
-- [Day 13 - 2025/11/08](./learning-journey/2025-11-08.md) - メモアプリ完成、検索機能、CSSスタイリング
+2025年10月16日から継続的に学習を記録しています。詳細は各日付のファイルを参照してください。
 
 ## 🚀 実装した機能
 
@@ -128,6 +95,18 @@ npm run dev
 - ✅ LocalStorageでデータ永続化
 - ✅ 検索機能（タイトル・本文から検索）
 - ✅ CSSスタイリング
+
+### 家計簿アプリ（Phase 3-2完了）
+- ✅ 収入・支出の記録
+- ✅ カテゴリ分類（支出：食費、交通費、娯楽、光熱費、通信費、その他）
+- ✅ カテゴリ分類（収入：給与、副業、お小遣い、その他）
+- ✅ 合計金額の計算（収入・支出・残高）
+- ✅ 月ごとの表示切り替え（フィルター機能）
+- ✅ LocalStorageでデータ永続化
+- ✅ エラーハンドリング（LocalStorage読み込み失敗時）
+- ✅ **カテゴリ別支出グラフ（横棒グラフ）**
+- ✅ **収入・支出比較グラフ（縦棒グラフ）**
+- ✅ CSSスタイリング（グラデーション、アニメーション）
 
 ## 🛠️ 技術スタック
 
@@ -332,14 +311,16 @@ npm run storybook
 
 ---
 
-#### お題5: 簡易家計簿アプリ
+#### ✅ お題5: 簡易家計簿アプリ
 - 収入・支出の記録
 - カテゴリ分類
 - 合計金額の計算
 - 月ごとの表示切り替え
-- グラフ表示（オプション）
+- グラフ表示（カテゴリ別支出・収入支出比較）
 
-**学習内容：** データの集計と表示
+**学習内容：** データの集計と表示、CSSグラフ実装
+
+**完了日：** 2025/11/14
 
 ---
 
