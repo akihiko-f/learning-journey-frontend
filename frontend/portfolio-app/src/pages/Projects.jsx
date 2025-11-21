@@ -12,6 +12,17 @@ function Projects() {
         <div className="page">
             <h1>Projects</h1>
             <p>これまでに作成したプロジェクト一覧です。</p>
+
+            <div className="projects-grid">
+                {projects.map(project => (
+                    <div key={project.id} className="project-card">
+                        <h3>{project.name}</h3>
+                        <p>{project.description}</p>
+                    </div>
+                ))}
+            </div>
         </div>
     )
 }
+
+export default Projects
