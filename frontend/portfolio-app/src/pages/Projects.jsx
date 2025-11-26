@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 function Projects() {
     const projects = [
         { id: 1, name: 'ToDoアプリ', description: 'タスク管理アプリケーション' },
@@ -15,10 +17,17 @@ function Projects() {
 
             <div className="projects-grid">
                 {projects.map(project => (
-                    <div key={project.id} className="project-card">
-                        <h3>{project.name}</h3>
-                        <p>{project.description}</p>
-                    </div>
+                    <Link
+                        key={project.id}
+                        to={`/projects/${project.id}`}
+                        className="project-card-link"
+                    >
+                        <div key={project.id} className="project-card">
+                            <h3>{project.name}</h3>
+                            <p>{project.description}</p>
+                            <span className="view-detail">詳細を見る →</span>
+                        </div>
+                    </Link>
                 ))}
             </div>
         </div>

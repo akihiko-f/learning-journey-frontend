@@ -151,3 +151,63 @@ body {
 .contact-form button:hover {
   opacity: 0.9;
 }
+
+/* Project Detail Styles */
+.back-link {
+  display: inline-block;
+  color: #667eea;
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.back-link:hover {
+  color: #764ba2;
+}
+
+.project-description {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.project-date {
+  color: #999;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.tech-tag {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Project Card Link */
+.project-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.view-detail {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #667eea;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.project-card:hover .view-detail {
+  color: #764ba2;
+}
