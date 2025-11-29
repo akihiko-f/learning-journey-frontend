@@ -50,7 +50,32 @@
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Ïπ›Û∑÷«∂§Û */
+/* Theme Toggle Button */
+.theme-toggle {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 1.5rem;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(20deg);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+/* „É¨„Çπ„Éù„É≥„Ç∑„Éñ„Éá„Ç∂„Ç§„É≥ */
 @media (max-width: 768px) {
   .nav-container {
     flex-direction: column;

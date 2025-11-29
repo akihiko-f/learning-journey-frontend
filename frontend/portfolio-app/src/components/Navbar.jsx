@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
+import { useTheme } from '../contexts/ThemeContext'
 import './Navbar.css'
 
 function Navbar() {
+    const { isDark, toggleTheme } = useTheme()
+
     return (
         <nav className='navbar'>
             <div className='nav-container'>
@@ -29,6 +32,11 @@ function Navbar() {
                         <Link to="/contact" className='nav-link'>
                             Contact
                         </Link>
+                    </li>
+                    <li className='nav-item'>
+                        <button onClick={toggleTheme} className='theme-toggle'>
+                            {isDark ? '☀️' : '🌙'}
+                        </button>
                     </li>
                 </ul>
             </div>
