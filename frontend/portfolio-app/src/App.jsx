@@ -7,6 +7,7 @@ import Projects from './pages/Projects'
 import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
 import ProjectDetail from './pages/ProjectDetail'
+import PerformanceDemo from './pages/PerformanceDemo'
 import './App.css'
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
               <Route path='/projects/:id' element={<ProjectDetail />} />
               <Route path='/contact' element={<Contact />} />
               <Route path='*' element={<NotFound />} />
+              <Route path='/performance' element={<PerformanceDemo />} />
             </Routes>
           </main>
         </div>
