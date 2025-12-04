@@ -427,6 +427,7 @@ small: text-sm (14px) - font-normal
 
 ---
 
+
 ### 6. 記事編集ページ (`/posts/[id]/edit`)
 
 記事作成ページと同じUI構造、ロケーターも共通。
