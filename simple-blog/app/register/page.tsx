@@ -1,8 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
+import {
+  validateEmail,
+  validatePassword,
+  validateUsername,
+  validateName,
+} from '@/lib/validation'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -17,10 +23,52 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState('')
   const [focusedField, setFocusedField] = useState<string | null>(null)
 
+  // エラー時に該当フィールドにフォーカスを当てる
+  useEffect(() => {
+    if (focusedField) {
+      const element = document.querySelector(
+        `[data-testid="${focusedField}"]`
+      ) as HTMLElement
+      if (element) {
+        element.focus()
+      }
+    }
+  }, [focusedField])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setSuccess('')
+    setFocusedField(null)
+
+    // クライアント側バリデーション
+    const emailValidation = validateEmail(formData.email)
+    if (!emailValidation.valid) {
+      setError(emailValidation.error!)
+      setFocusedField('email-input')
+      return
+    }
+
+    const usernameValidation = validateUsername(formData.username)
+    if (!usernameValidation.valid) {
+      setError(usernameValidation.error!)
+      setFocusedField('username-input')
+      return
+    }
+
+    const nameValidation = validateName(formData.name)
+    if (!nameValidation.valid) {
+      setError(nameValidation.error!)
+      setFocusedField('name-input')
+      return
+    }
+
+    const passwordValidation = validatePassword(formData.password)
+    if (!passwordValidation.valid) {
+      setError(passwordValidation.error!)
+      setFocusedField('password-input')
+      return
+    }
 
     // パスワード確認
     if (formData.password !== formData.passwordConfirm) {
@@ -88,7 +136,7 @@ export default function RegisterPage() {
             アカウント登録
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit} noValidate>
           {error && (
             <div
               data-testid="error-message"
