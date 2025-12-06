@@ -46,6 +46,64 @@ export function validatePassword(password: string): ValidationResult {
 }
 
 /**
+ * ユーザー名のバリデーション
+ * 2-30文字、半角英数字・アンダースコア・ハイフン
+ */
+export function validateUsername(username: string): ValidationResult {
+  const MIN_LENGTH = 2
+  const MAX_LENGTH = 30
+  const usernameRegex = /^[a-zA-Z0-9_-]+$/
+
+  if (!username) {
+    return {
+      valid: false,
+      error: 'ユーザー名を入力してください',
+    }
+  }
+
+  if (username.length < MIN_LENGTH || username.length > MAX_LENGTH) {
+    return {
+      valid: false,
+      error: 'ユーザー名は2-30文字で入力してください',
+    }
+  }
+
+  if (!usernameRegex.test(username)) {
+    return {
+      valid: false,
+      error: 'ユーザー名は半角英数字、アンダースコア、ハイフンのみ使用できます',
+    }
+  }
+
+  return { valid: true }
+}
+
+/**
+ * 表示名のバリデーション
+ * 1-100文字
+ */
+export function validateName(name: string): ValidationResult {
+  const MAX_LENGTH = 100
+  const trimmedName = name.trim()
+
+  if (!trimmedName) {
+    return {
+      valid: false,
+      error: '表示名を入力してください',
+    }
+  }
+
+  if (trimmedName.length > MAX_LENGTH) {
+    return {
+      valid: false,
+      error: '表示名は100文字以内で入力してください',
+    }
+  }
+
+  return { valid: true }
+}
+
+/**
  * 記事タイトルのバリデーション
  * TC-103: タイトルが空
  * TC-105: 100文字（境界値）
