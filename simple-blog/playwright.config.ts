@@ -6,13 +6,13 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './e2e',
-  /* 並列実行設定 */
-  fullyParallel: true,
+  /* 並列実行設定 - DBを共有するためファイル間は順次実行 */
+  fullyParallel: false,
   /* CI環境でのリトライ設定 */
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  /* CI環境ではworkerを制限 */
-  workers: process.env.CI ? 1 : undefined,
+  /* ワーカー数 - DBを共有するため1に制限 */
+  workers: 1,
   /* レポーター設定 */
   reporter: 'html',
   /* 共通設定 */
