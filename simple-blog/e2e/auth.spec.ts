@@ -3,7 +3,18 @@ import { test, expect } from '@playwright/test';
 /**
  * 認証機能のE2Eテスト
  * テスト設計書: docs/blog-test-design.md
+ *
+ * 注意: 認証テストはDBを共有するため、並列実行ではなくシリアル実行する
+ * これにより、reset-dbやcreate-userの競合を防ぐ
  */
+test.describe.configure({ mode: 'serial' });
+
+// 各テストの前にデータベースをクリーンアップ
+test.beforeEach(async ({ page }) => {
+  // データベースリセットAPIを呼び出す
+  const response = await page.request.post('/api/test/reset-db');
+  expect(response.ok()).toBeTruthy();
+});
 
 test.describe('ユーザー登録機能', () => {
   /**
@@ -111,19 +122,33 @@ test.describe('ユーザー登録機能', () => {
 });
 
 test.describe('ログイン機能', () => {
+  // ログインテスト用のユーザーを事前作成（APIで直接作成）
+  // 登録テストとの競合を避けるため、ログイン専用のメールアドレスを使用
+  test.beforeEach(async ({ page }) => {
+    // テストユーザーをAPIで作成（ログイン状態にならない）
+    const response = await page.request.post('/api/test/create-user', {
+      data: {
+        email: 'login-test@example.com',
+        username: 'loginuser',
+        name: 'Login Test User',
+        password: 'Password123',
+      },
+    });
+    expect(response.ok()).toBeTruthy();
+  });
+
   /**
    * TC-011: 正常系 - 有効な認証情報でログイン
    * 優先度: P0 (Critical)
    *
-   * 前提条件: user@example.com / Password123 で登録済み
-   * (実際にはテストデータのセットアップが必要)
+   * 前提条件: login-test@example.com / Password123 で登録済み
    */
   test('TC-011: 有効な認証情報でログインできる', async ({ page }) => {
     // 前提条件: ログインページにアクセス
     await page.goto('/login');
 
     // テスト手順1: email-inputにメールアドレスを入力
-    await page.getByTestId('email-input').fill('user@example.com');
+    await page.getByTestId('email-input').fill('login-test@example.com');
 
     // テスト手順2: password-inputにパスワードを入力
     await page.getByTestId('password-input').fill('Password123');
@@ -145,7 +170,7 @@ test.describe('ログイン機能', () => {
   test('TC-012: パスワードが間違っている場合エラーが表示される', async ({ page }) => {
     await page.goto('/login');
 
-    await page.getByTestId('email-input').fill('user@example.com');
+    await page.getByTestId('email-input').fill('login-test@example.com');
     // 間違ったパスワード
     await page.getByTestId('password-input').fill('WrongPassword');
     await page.getByTestId('login-button').click();

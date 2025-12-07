@@ -121,7 +121,9 @@ export default function RegisterPage() {
 
       if (signInResult?.ok) {
         // トップページにリダイレクト
+        // router.refresh()を使ってサーバーコンポーネントを再レンダリング
         router.push('/')
+        router.refresh()
       }
     } catch (err) {
       setError('サーバーエラーが発生しました')
