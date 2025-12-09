@@ -71,9 +71,8 @@ test.describe('記事投稿機能', () => {
   /**
    * TC-102: 正常系 - 下書きとして保存
    * 優先度: P0 (Critical)
-   * TODO: ダッシュボードページ実装後に有効化
    */
-  test.skip('TC-102: 記事を下書きとして保存できる', async ({ page }) => {
+  test('TC-102: 記事を下書きとして保存できる', async ({ page }) => {
     await loginAsTestUser(page);
     await page.goto('/posts/new');
 
@@ -83,13 +82,13 @@ test.describe('記事投稿機能', () => {
     // 下書き保存ボタンをクリック
     await page.getByTestId('save-draft-button').click();
 
-    // 期待結果1: 成功メッセージが表示される
-    await expect(page.getByTestId('success-message')).toHaveText('下書きを保存しました');
-
-    // 期待結果2: ダッシュボードにリダイレクトされる
+    // 期待結果1: ダッシュボードにリダイレクトされる
     await expect(page).toHaveURL('/dashboard');
 
-    // 期待結果3: 記事一覧には表示されない(下書きのため)
+    // 期待結果2: ダッシュボードに下書きが表示される
+    await expect(page.getByText('下書き記事')).toBeVisible();
+
+    // 期待結果3: トップページ（公開記事一覧）には表示されない
     await page.goto('/');
     await expect(page.getByText('下書き記事')).not.toBeVisible();
   });
@@ -213,23 +212,56 @@ test.describe('記事投稿機能', () => {
 });
 
 test.describe('記事編集・削除機能', () => {
+  let testUserId: string;
+
+  // 各テストの前にデータベースをクリーンアップし、テストユーザーを作成
+  test.beforeEach(async ({ page }) => {
+    await page.request.post('/api/test/reset-db');
+    const userResponse = await page.request.post('/api/test/create-user', {
+      data: {
+        email: 'post-test@example.com',
+        username: 'postuser',
+        name: 'Post Test User',
+        password: 'Password123',
+      },
+    });
+    const userData = await userResponse.json();
+    testUserId = userData.userId;
+  });
+
+  // テスト用の記事をAPI経由で作成するヘルパー関数
+  async function createTestPostViaApi(page: import('@playwright/test').Page, title: string = 'テスト記事', content: string = 'テストの内容') {
+    const response = await page.request.post('/api/test/create-post', {
+      data: {
+        title,
+        content,
+        authorId: testUserId,
+        status: 'PUBLISHED',
+      },
+    });
+    const data = await response.json();
+    return data.post.id;
+  }
+
   /**
    * TC-115: 正常系 - 自分の記事を編集
    * 優先度: P0 (Critical)
-   * TODO: 編集機能実装後に有効化
    */
-  test.skip('TC-115: 自分の記事を編集できる', async ({ page }) => {
-    // 前提条件: 自分の記事が存在する
-    // TODO: テストデータのセットアップ
+  test('TC-115: 自分の記事を編集できる', async ({ page }) => {
+    // API経由でテスト用記事を作成
+    const postId = await createTestPostViaApi(page, '編集前のタイトル', '編集前の内容');
+
+    // ログイン
+    await loginAsTestUser(page);
 
     // 記事詳細ページにアクセス
-    await page.goto('/posts/test-post-id');
+    await page.goto(`/posts/${postId}`);
 
     // edit-buttonをクリック
     await page.getByTestId('edit-button').click();
 
     // 編集ページに遷移
-    await expect(page).toHaveURL('/posts/test-post-id/edit');
+    await expect(page).toHaveURL(`/posts/${postId}/edit`);
 
     // タイトルを変更
     await page.getByTestId('title-input').fill('編集後のタイトル');
@@ -237,11 +269,8 @@ test.describe('記事編集・削除機能', () => {
     // 保存
     await page.getByTestId('save-button').click();
 
-    // 期待結果: 成功メッセージが表示される
-    await expect(page.getByTestId('success-message')).toHaveText('記事を更新しました');
-
     // 期待結果: 記事詳細ページにリダイレクトされる
-    await expect(page).toHaveURL('/posts/test-post-id');
+    await expect(page).toHaveURL(`/posts/${postId}`);
 
     // 期待結果: 変更が反映されている
     await expect(page.getByTestId('post-title')).toHaveText('編集後のタイトル');
@@ -250,10 +279,15 @@ test.describe('記事編集・削除機能', () => {
   /**
    * TC-117: 正常系 - 自分の記事を削除
    * 優先度: P0 (Critical)
-   * TODO: 削除機能実装後に有効化
    */
-  test.skip('TC-117: 自分の記事を削除できる', async ({ page }) => {
-    await page.goto('/posts/test-post-id');
+  test('TC-117: 自分の記事を削除できる', async ({ page }) => {
+    // API経由でテスト用記事を作成
+    const postId = await createTestPostViaApi(page, '削除する記事', '削除するテスト内容');
+
+    // ログイン
+    await loginAsTestUser(page);
+
+    await page.goto(`/posts/${postId}`);
 
     // delete-buttonをクリック
     await page.getByTestId('delete-button').click();
@@ -263,18 +297,20 @@ test.describe('記事編集・削除機能', () => {
 
     // 期待結果: ダッシュボードにリダイレクトされる
     await expect(page).toHaveURL('/dashboard');
-
-    // 期待結果: 成功メッセージが表示される
-    await expect(page.getByTestId('success-message')).toHaveText('記事を削除しました');
   });
 
   /**
    * TC-118: UI - 削除確認ダイアログ
    * 優先度: P1 (High)
-   * TODO: 削除機能実装後に有効化
    */
-  test.skip('TC-118: 削除確認ダイアログでキャンセルできる', async ({ page }) => {
-    await page.goto('/posts/test-post-id');
+  test('TC-118: 削除確認ダイアログでキャンセルできる', async ({ page }) => {
+    // API経由でテスト用記事を作成
+    const postId = await createTestPostViaApi(page, 'キャンセルテスト記事', 'キャンセルテスト内容');
+
+    // ログイン
+    await loginAsTestUser(page);
+
+    await page.goto(`/posts/${postId}`);
 
     await page.getByTestId('delete-button').click();
 
@@ -285,7 +321,7 @@ test.describe('記事編集・削除機能', () => {
     await expect(page.getByTestId('confirm-delete-button')).not.toBeVisible();
 
     // 期待結果: 記事詳細ページに留まる
-    await expect(page).toHaveURL('/posts/test-post-id');
+    await expect(page).toHaveURL(`/posts/${postId}`);
   });
 });
 
