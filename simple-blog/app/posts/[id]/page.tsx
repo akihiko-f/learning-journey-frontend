@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import ReactMarkdown from 'react-markdown'
 import { PostActions } from '@/components/PostActions'
+import { slugifyTagName } from '@/lib/utils'
 
 interface PostPageProps {
   params: Promise<{ id: string }>
@@ -20,6 +21,7 @@ async function getPost(id: string) {
           image: true,
         },
       },
+      tags: true,
     },
   })
 
@@ -76,6 +78,19 @@ export default async function PostPage({ params }: PostPageProps) {
               {formattedDate}
             </time>
           </div>
+          {post.tags && post.tags.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {post.tags.map((tag) => (
+                <span
+                  key={tag.id}
+                  data-testid={`post-tag-${slugifyTagName(tag.name)}`}
+                  className="inline-block px-3 py-1 rounded-full text-sm bg-indigo-100 text-indigo-800"
+                >
+                  {tag.name}
+                </span>
+              ))}
+            </div>
+          )}
         </header>
 
         <div

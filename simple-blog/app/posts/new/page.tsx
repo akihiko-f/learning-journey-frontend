@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { validatePostTitle } from '@/lib/validation'
+import { TagInput } from '@/components/TagInput'
 
 export default function NewPostPage() {
   const router = useRouter()
@@ -12,6 +13,7 @@ export default function NewPostPage() {
     title: '',
     content: '',
   })
+  const [tags, setTags] = useState<string[]>([])
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [focusedField, setFocusedField] = useState<string | null>(null)
@@ -62,6 +64,7 @@ export default function NewPostPage() {
           title: formData.title,
           content: formData.content,
           status: isDraft ? 'DRAFT' : 'PUBLISHED',
+          tags,
         }),
       })
 
@@ -168,6 +171,8 @@ export default function NewPostPage() {
                 }
               />
             </div>
+
+            <TagInput tags={tags} onTagsChange={setTags} />
 
             <div className="flex gap-4">
               <button

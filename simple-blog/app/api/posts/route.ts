@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const { title, content, status } = await request.json()
+    const { title, content, status, tags } = await request.json()
 
     // タイトルバリデーション
     const titleValidation = validatePostTitle(title)
@@ -32,6 +32,16 @@ export async function POST(request: Request) {
     // 抜粋を生成（本文の最初の100文字）
     const excerpt = content ? content.substring(0, 100) : ''
 
+    // タグを処理（存在しないタグは作成、存在するタグは接続）
+    const tagConnections = tags && tags.length > 0
+      ? {
+          connectOrCreate: tags.map((tagName: string) => ({
+            where: { name: tagName },
+            create: { name: tagName },
+          })),
+        }
+      : undefined
+
     // 記事を作成
     const post = await prisma.post.create({
       data: {
@@ -41,6 +51,10 @@ export async function POST(request: Request) {
         status: status || 'DRAFT',
         authorId: session.user.id,
         publishedAt: status === 'PUBLISHED' ? new Date() : null,
+        tags: tagConnections,
+      },
+      include: {
+        tags: true,
       },
     })
 

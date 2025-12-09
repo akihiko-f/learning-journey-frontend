@@ -182,13 +182,12 @@ test.describe('記事投稿機能', () => {
   /**
    * TC-111: 正常系 - タグを追加
    * 優先度: P1 (High)
-   * TODO: タグ機能実装後に有効化
    */
-  test.skip('TC-111: 記事にタグを追加できる', async ({ page }) => {
+  test('TC-111: 記事にタグを追加できる', async ({ page }) => {
     await loginAsTestUser(page);
     await page.goto('/posts/new');
 
-    await page.getByTestId('title-input').fill('タイトル');
+    await page.getByTestId('title-input').fill('タグ付き記事');
     await page.getByTestId('content-editor').fill('本文');
 
     // タグを追加
@@ -203,8 +202,10 @@ test.describe('記事投稿機能', () => {
 
     await page.getByTestId('publish-button').click();
 
-    // 期待結果: 記事が作成され、タグが表示される
-    await expect(page.getByTestId('success-message')).toBeVisible();
+    // 期待結果: 記事詳細ページにリダイレクトされる
+    await expect(page).toHaveURL(/\/posts\/[a-z0-9]+/);
+
+    // 期待結果: タグが表示される
     await expect(page.getByTestId('post-tag-react')).toBeVisible();
     await expect(page.getByTestId('post-tag-nextjs')).toBeVisible();
     await expect(page.getByTestId('post-tag-typescript')).toBeVisible();
