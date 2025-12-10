@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import ReactMarkdown from 'react-markdown'
+import Image from 'next/image'
 import { PostActions } from '@/components/PostActions'
 import { slugifyTagName } from '@/lib/utils'
 
@@ -92,6 +93,19 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
           )}
         </header>
+
+        {post.coverImage && (
+          <div className="mb-8">
+            <Image
+              src={post.coverImage}
+              alt={post.title}
+              width={800}
+              height={400}
+              className="w-full h-64 object-cover rounded-lg"
+              data-testid="post-cover-image"
+            />
+          </div>
+        )}
 
         <div
           data-testid="post-content"

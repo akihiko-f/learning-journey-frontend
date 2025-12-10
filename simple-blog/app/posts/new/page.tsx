@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { validatePostTitle } from '@/lib/validation'
 import { TagInput } from '@/components/TagInput'
+import { ImageUpload } from '@/components/ImageUpload'
 
 export default function NewPostPage() {
   const router = useRouter()
@@ -14,6 +15,7 @@ export default function NewPostPage() {
     content: '',
   })
   const [tags, setTags] = useState<string[]>([])
+  const [coverImage, setCoverImage] = useState<string | undefined>()
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [focusedField, setFocusedField] = useState<string | null>(null)
@@ -65,6 +67,7 @@ export default function NewPostPage() {
           content: formData.content,
           status: isDraft ? 'DRAFT' : 'PUBLISHED',
           tags,
+          coverImage,
         }),
       })
 
@@ -171,6 +174,8 @@ export default function NewPostPage() {
                 }
               />
             </div>
+
+            <ImageUpload value={coverImage} onChange={setCoverImage} />
 
             <TagInput tags={tags} onTagsChange={setTags} />
 

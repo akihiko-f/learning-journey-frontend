@@ -158,9 +158,8 @@ test.describe('記事投稿機能', () => {
   /**
    * TC-108: 正常系 - アイキャッチ画像をアップロード
    * 優先度: P1 (High)
-   * TODO: 画像アップロード機能実装後に有効化
    */
-  test.skip('TC-108: アイキャッチ画像をアップロードできる', async ({ page }) => {
+  test('TC-108: アイキャッチ画像をアップロードできる', async ({ page }) => {
     await loginAsTestUser(page);
     await page.goto('/posts/new');
 
@@ -168,15 +167,19 @@ test.describe('記事投稿機能', () => {
     await page.getByTestId('content-editor').fill('本文');
 
     // アイキャッチ画像をアップロード
-    // TODO: テスト用の画像ファイルを用意してアップロード
-    // const fileInput = page.getByTestId('cover-image-upload');
-    // await fileInput.setInputFiles('path/to/test-image.jpg');
+    const fileInput = page.getByTestId('cover-image-upload');
+    await fileInput.setInputFiles('e2e/fixtures/test-image.png');
+
+    // 画像プレビューが表示されるのを待つ
+    await expect(page.getByTestId('cover-image-preview')).toBeVisible();
 
     await page.getByTestId('publish-button').click();
 
-    // 期待結果: 記事が作成され、画像が表示される
-    await expect(page.getByTestId('success-message')).toBeVisible();
-    // await expect(page.getByTestId('post-cover-image')).toBeVisible();
+    // 期待結果: 記事詳細ページにリダイレクトされる
+    await expect(page).toHaveURL(/\/posts\/[a-z0-9]+/);
+
+    // 期待結果: アイキャッチ画像が表示される
+    await expect(page.getByTestId('post-cover-image')).toBeVisible();
   });
 
   /**

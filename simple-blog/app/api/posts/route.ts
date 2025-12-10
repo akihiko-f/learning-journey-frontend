@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const { title, content, status, tags } = await request.json()
+    const { title, content, status, tags, coverImage } = await request.json()
 
     // タイトルバリデーション
     const titleValidation = validatePostTitle(title)
@@ -48,6 +48,7 @@ export async function POST(request: Request) {
         title,
         content: content || '',
         excerpt,
+        coverImage: coverImage || null,
         status: status || 'DRAFT',
         authorId: session.user.id,
         publishedAt: status === 'PUBLISHED' ? new Date() : null,
