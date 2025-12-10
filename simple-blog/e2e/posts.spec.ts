@@ -327,6 +327,36 @@ test.describe('記事編集・削除機能', () => {
 });
 
 test.describe('記事閲覧機能', () => {
+  let testUserId: string;
+  let testPostId: string;
+
+  // 各テストの前にデータベースをクリーンアップし、テストデータを作成
+  test.beforeEach(async ({ page }) => {
+    await page.request.post('/api/test/reset-db');
+    const userResponse = await page.request.post('/api/test/create-user', {
+      data: {
+        email: 'viewer@example.com',
+        username: 'viewer',
+        name: 'Viewer User',
+        password: 'Password123',
+      },
+    });
+    const userData = await userResponse.json();
+    testUserId = userData.userId;
+
+    // テスト用公開記事を作成
+    const postResponse = await page.request.post('/api/test/create-post', {
+      data: {
+        title: '閲覧テスト用記事',
+        content: 'これは閲覧テスト用の本文です。',
+        authorId: testUserId,
+        status: 'PUBLISHED',
+      },
+    });
+    const postData = await postResponse.json();
+    testPostId = postData.post.id;
+  });
+
   /**
    * TC-120: 正常系 - 公開記事一覧を表示
    * 優先度: P0 (Critical)
@@ -353,19 +383,18 @@ test.describe('記事閲覧機能', () => {
   /**
    * TC-122: 正常系 - 記事詳細を表示
    * 優先度: P0 (Critical)
-   * TODO: テストデータセットアップ後に有効化
    */
-  test.skip('TC-122: 記事詳細が表示される', async ({ page }) => {
+  test('TC-122: 記事詳細が表示される', async ({ page }) => {
     // 記事詳細ページにアクセス
-    await page.goto('/posts/test-post-id');
+    await page.goto(`/posts/${testPostId}`);
 
     // 期待結果: post-detail-pageが表示される
     await expect(page.getByTestId('post-detail-page')).toBeVisible();
 
     // 期待結果: タイトル、本文、著者、日時が表示される
-    await expect(page.getByTestId('post-title')).toBeVisible();
+    await expect(page.getByTestId('post-title')).toHaveText('閲覧テスト用記事');
     await expect(page.getByTestId('post-content')).toBeVisible();
-    await expect(page.getByTestId('post-author')).toBeVisible();
+    await expect(page.getByTestId('post-author')).toHaveText('Viewer User');
     await expect(page.getByTestId('post-date')).toBeVisible();
   });
 });
