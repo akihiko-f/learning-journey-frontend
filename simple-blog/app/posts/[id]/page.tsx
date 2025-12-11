@@ -4,6 +4,7 @@ import { auth } from '@/auth'
 import ReactMarkdown from 'react-markdown'
 import Image from 'next/image'
 import { PostActions } from '@/components/PostActions'
+import { CommentSection } from '@/components/CommentSection'
 import { slugifyTagName } from '@/lib/utils'
 
 interface PostPageProps {
@@ -113,6 +114,13 @@ export default async function PostPage({ params }: PostPageProps) {
         >
           <ReactMarkdown>{post.content}</ReactMarkdown>
         </div>
+
+        {/* コメントセクション */}
+        <CommentSection
+          postId={post.id}
+          currentUserId={session?.user?.id}
+          isLoggedIn={!!session?.user}
+        />
       </article>
     </div>
   )
