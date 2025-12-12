@@ -384,6 +384,43 @@ test.describe('記事閲覧機能', () => {
   });
 
   /**
+   * TC-121: 正常系 - ページネーション
+   * 優先度: P1 (High)
+   */
+  test('TC-121: ページネーションで次のページに移動できる', async ({ page }) => {
+    // 15件の公開記事を作成（1ページ10件表示なので2ページ必要）
+    for (let i = 1; i <= 14; i++) {
+      await page.request.post('/api/test/create-post', {
+        data: {
+          title: `テスト記事 ${i}`,
+          content: `テスト本文 ${i}`,
+          authorId: testUserId,
+          status: 'PUBLISHED',
+        },
+      });
+    }
+
+    // トップページにアクセス
+    await page.goto('/');
+
+    // 期待結果: paginationが表示される
+    await expect(page.getByTestId('pagination')).toBeVisible();
+
+    // 期待結果: 1ページ目に10件表示される
+    await expect(page.getByTestId('post-card-1')).toBeVisible();
+    await expect(page.getByTestId('post-card-10')).toBeVisible();
+
+    // テスト手順: pagination-nextをクリック
+    await page.getByTestId('pagination-next').click();
+
+    // 期待結果: URLが/?page=2になる
+    await expect(page).toHaveURL('/?page=2');
+
+    // 期待結果: 2ページ目の記事が表示される（残り5件）
+    await expect(page.getByTestId('post-card-1')).toBeVisible();
+  });
+
+  /**
    * TC-122: 正常系 - 記事詳細を表示
    * 優先度: P0 (Critical)
    */
