@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { title, content, authorId, status = 'PUBLISHED' } = await request.json()
+    const { title, content, authorId, status = 'PUBLISHED', tags } = await request.json()
 
     if (!title || !authorId) {
       return NextResponse.json(
@@ -23,6 +23,16 @@ export async function POST(request: Request) {
         { status: 400 }
       )
     }
+
+    // タグを処理（存在しないタグは作成、存在するタグは接続）
+    const tagConnections = tags && tags.length > 0
+      ? {
+          connectOrCreate: tags.map((tagName: string) => ({
+            where: { name: tagName },
+            create: { name: tagName },
+          })),
+        }
+      : undefined
 
     const post = await prisma.post.create({
       data: {
@@ -32,6 +42,10 @@ export async function POST(request: Request) {
         authorId,
         status,
         publishedAt: status === 'PUBLISHED' ? new Date() : null,
+        tags: tagConnections,
+      },
+      include: {
+        tags: true,
       },
     })
 

@@ -437,4 +437,53 @@ test.describe('記事閲覧機能', () => {
     await expect(page.getByTestId('post-author')).toHaveText('Viewer User');
     await expect(page.getByTestId('post-date')).toBeVisible();
   });
+
+  /**
+   * TC-123: 正常系 - タグで記事をフィルタリング
+   * 優先度: P1 (High)
+   */
+  test('TC-123: タグで記事をフィルタリングできる', async ({ page }) => {
+    // Reactタグ付きの記事を作成
+    await page.request.post('/api/test/create-post', {
+      data: {
+        title: 'React記事',
+        content: 'Reactについての記事です',
+        authorId: testUserId,
+        status: 'PUBLISHED',
+        tags: ['React'],
+      },
+    });
+
+    // Next.jsタグ付きの記事を作成
+    await page.request.post('/api/test/create-post', {
+      data: {
+        title: 'Next.js記事',
+        content: 'Next.jsについての記事です',
+        authorId: testUserId,
+        status: 'PUBLISHED',
+        tags: ['Next.js'],
+      },
+    });
+
+    // トップページにアクセス
+    await page.goto('/');
+
+    // React記事が表示されていることを確認
+    await expect(page.getByText('React記事')).toBeVisible();
+    await expect(page.getByText('Next.js記事')).toBeVisible();
+
+    // テスト手順: Reactタグをクリック
+    await page.getByTestId('post-tag-react').first().click();
+
+    // 期待結果: URLが/posts?tag=reactになる
+    await expect(page).toHaveURL('/posts?tag=react');
+
+    // 期待結果: Reactタグの付いた記事のみが表示される
+    await expect(page.getByText('React記事')).toBeVisible();
+    await expect(page.getByText('Next.js記事')).not.toBeVisible();
+
+    // 期待結果: フィルター表示バッジが表示される
+    await expect(page.getByTestId('tag-filter-badge')).toBeVisible();
+    await expect(page.getByTestId('tag-filter-badge')).toContainText('React');
+  });
 });

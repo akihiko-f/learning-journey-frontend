@@ -6,16 +6,40 @@ import { slugifyTagName } from '@/lib/utils'
 
 const POSTS_PER_PAGE = 10
 
-interface HomeProps {
-  searchParams: Promise<{ page?: string }>
+interface PostsPageProps {
+  searchParams: Promise<{ page?: string; tag?: string }>
 }
 
-async function getPosts(page: number) {
+async function getPosts(page: number, tagSlug?: string) {
   const skip = (page - 1) * POSTS_PER_PAGE
+
+  // タグ名を取得（スラッグから）
+  let tagName: string | undefined
+  if (tagSlug) {
+    const tag = await prisma.tag.findFirst({
+      where: {
+        name: {
+          contains: tagSlug,
+        },
+      },
+    })
+    tagName = tag?.name
+  }
+
+  const whereCondition = {
+    status: 'PUBLISHED' as const,
+    ...(tagName && {
+      tags: {
+        some: {
+          name: tagName,
+        },
+      },
+    }),
+  }
 
   const [posts, totalCount] = await Promise.all([
     prisma.post.findMany({
-      where: { status: 'PUBLISHED' },
+      where: whereCondition,
       orderBy: { publishedAt: 'desc' },
       skip,
       take: POSTS_PER_PAGE,
@@ -31,20 +55,20 @@ async function getPosts(page: number) {
         tags: true,
       },
     }),
-    prisma.post.count({ where: { status: 'PUBLISHED' } }),
+    prisma.post.count({ where: whereCondition }),
   ])
 
   const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE)
 
-  return { posts, totalCount, totalPages }
+  return { posts, totalCount, totalPages, tagName }
 }
 
-export default async function Home({ searchParams }: HomeProps) {
+export default async function PostsPage({ searchParams }: PostsPageProps) {
   const session = await auth()
-  const { page } = await searchParams
+  const { page, tag } = await searchParams
   const currentPage = Math.max(1, parseInt(page || '1', 10))
 
-  const { posts, totalPages } = await getPosts(currentPage)
+  const { posts, totalPages, tagName } = await getPosts(currentPage, tag)
 
   const formatDate = (date: Date | null) => {
     if (!date) return ''
@@ -54,6 +78,8 @@ export default async function Home({ searchParams }: HomeProps) {
       day: 'numeric',
     })
   }
+
+  const basePath = tag ? `/posts?tag=${tag}` : '/posts'
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -110,14 +136,38 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            記事一覧
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-gray-900">
+              記事一覧
+            </h2>
+          </div>
+
+          {/* タグフィルターバッジ */}
+          {tagName && (
+            <div className="mb-6 flex items-center gap-2">
+              <span
+                data-testid="tag-filter-badge"
+                className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-indigo-100 text-indigo-800"
+              >
+                タグ: {tagName}
+                <Link
+                  href="/posts"
+                  data-testid="clear-tag-filter"
+                  className="ml-2 text-indigo-600 hover:text-indigo-800"
+                  aria-label="フィルターを解除"
+                >
+                  ×
+                </Link>
+              </span>
+            </div>
+          )}
 
           <div data-testid="post-list" className="space-y-6">
             {posts.length === 0 ? (
               <div className="bg-white shadow rounded-lg p-6">
-                <p className="text-gray-500">記事はまだありません</p>
+                <p className="text-gray-500">
+                  {tagName ? `「${tagName}」タグの記事はありません` : '記事はまだありません'}
+                </p>
               </div>
             ) : (
               posts.map((post, index) => (
@@ -162,14 +212,14 @@ export default async function Home({ searchParams }: HomeProps) {
                         </div>
                         {post.tags.length > 0 && (
                           <div className="mt-3 flex flex-wrap gap-2">
-                            {post.tags.map((tag) => (
+                            {post.tags.map((tagItem) => (
                               <Link
-                                key={tag.id}
-                                href={`/posts?tag=${slugifyTagName(tag.name)}`}
-                                data-testid={`post-tag-${slugifyTagName(tag.name)}`}
+                                key={tagItem.id}
+                                href={`/posts?tag=${slugifyTagName(tagItem.name)}`}
+                                data-testid={`post-tag-${slugifyTagName(tagItem.name)}`}
                                 className="inline-block px-2 py-1 rounded-full text-xs bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
                               >
-                                {tag.name}
+                                {tagItem.name}
                               </Link>
                             ))}
                           </div>
@@ -187,7 +237,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              basePath="/"
+              basePath={basePath}
             />
           )}
         </div>
