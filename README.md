@@ -22,6 +22,7 @@ learning-journey/
 └── README.md
 ```
 
+
 各アプリは完全に独立したプロジェクトです。
 
 **free-practice-app について:**
