@@ -49,9 +49,9 @@ export default defineConfig({
   ],
 
   /* 開発サーバー設定 */
-  // webServer: {
-  //   command: 'npm run dev',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: true,
-  // },
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: true,
+  },
 });

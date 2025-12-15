@@ -1,51 +1,60 @@
 import { auth } from '@/auth'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
-import { Pagination } from '@/components/Pagination'
-import { SearchForm } from '@/components/SearchForm'
 import { slugifyTagName } from '@/lib/utils'
 
-const POSTS_PER_PAGE = 10
-
-interface HomeProps {
-  searchParams: Promise<{ page?: string }>
+interface SearchPageProps {
+  searchParams: Promise<{ q?: string; tag?: string }>
 }
 
-async function getPosts(page: number) {
-  const skip = (page - 1) * POSTS_PER_PAGE
+async function searchPosts(query: string, tag?: string) {
+  const whereCondition = {
+    status: 'PUBLISHED' as const,
+    AND: [
+      query
+        ? {
+            OR: [
+              { title: { contains: query } },
+              { content: { contains: query } },
+            ],
+          }
+        : {},
+      tag
+        ? {
+            tags: {
+              some: {
+                name: { contains: tag },
+              },
+            },
+          }
+        : {},
+    ],
+  }
 
-  const [posts, totalCount] = await Promise.all([
-    prisma.post.findMany({
-      where: { status: 'PUBLISHED' },
-      orderBy: { publishedAt: 'desc' },
-      skip,
-      take: POSTS_PER_PAGE,
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            image: true,
-          },
+  const posts = await prisma.post.findMany({
+    where: whereCondition,
+    orderBy: { publishedAt: 'desc' },
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          image: true,
         },
-        tags: true,
       },
-    }),
-    prisma.post.count({ where: { status: 'PUBLISHED' } }),
-  ])
+      tags: true,
+    },
+  })
 
-  const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE)
-
-  return { posts, totalCount, totalPages }
+  return posts
 }
 
-export default async function Home({ searchParams }: HomeProps) {
+export default async function SearchPage({ searchParams }: SearchPageProps) {
   const session = await auth()
-  const { page } = await searchParams
-  const currentPage = Math.max(1, parseInt(page || '1', 10))
+  const { q: query, tag } = await searchParams
 
-  const { posts, totalPages } = await getPosts(currentPage)
+  const posts = query || tag ? await searchPosts(query || '', tag) : []
 
   const formatDate = (date: Date | null) => {
     if (!date) return ''
@@ -54,6 +63,13 @@ export default async function Home({ searchParams }: HomeProps) {
       month: 'long',
       day: 'numeric',
     })
+  }
+
+  // 検索キーワードをハイライトする関数
+  const highlightText = (text: string, keyword: string) => {
+    if (!keyword) return text
+    const regex = new RegExp(`(${keyword})`, 'gi')
+    return text.replace(regex, '<mark class="bg-yellow-200">$1</mark>')
   }
 
   return (
@@ -66,8 +82,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 <Link href="/" className="text-xl font-bold">SimpleBlog</Link>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <SearchForm />
+            <div className="flex items-center">
               {session?.user ? (
                 <div className="flex items-center space-x-4">
                   <Link
@@ -113,19 +128,43 @@ export default async function Home({ searchParams }: HomeProps) {
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            記事一覧
+            検索結果
+            {query && <span className="text-lg font-normal text-gray-600 ml-2">「{query}」</span>}
           </h2>
 
-          <div data-testid="post-list" className="space-y-6">
-            {posts.length === 0 ? (
+          {/* フィルターバッジ */}
+          {tag && (
+            <div className="mb-6 flex items-center gap-2">
+              <span
+                data-testid="tag-filter-badge"
+                className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-indigo-100 text-indigo-800"
+              >
+                タグ: {tag}
+                <Link
+                  href={query ? `/search?q=${query}` : '/search'}
+                  className="ml-2 text-indigo-600 hover:text-indigo-800"
+                  aria-label="タグフィルターを解除"
+                >
+                  ×
+                </Link>
+              </span>
+            </div>
+          )}
+
+          <div data-testid="search-results" className="space-y-6">
+            {!query && !tag ? (
               <div className="bg-white shadow rounded-lg p-6">
-                <p className="text-gray-500">記事はまだありません</p>
+                <p className="text-gray-500">検索キーワードを入力してください</p>
+              </div>
+            ) : posts.length === 0 ? (
+              <div data-testid="empty-state" className="bg-white shadow rounded-lg p-6">
+                <p className="text-gray-500">該当する記事が見つかりませんでした</p>
               </div>
             ) : (
               posts.map((post, index) => (
                 <article
                   key={post.id}
-                  data-testid={`post-card-${index + 1}`}
+                  data-testid={`search-result-${index + 1}`}
                   className="bg-white shadow rounded-lg overflow-hidden hover:shadow-md transition-shadow"
                 >
                   <Link href={`/posts/${post.id}`} className="block p-6">
@@ -135,43 +174,41 @@ export default async function Home({ searchParams }: HomeProps) {
                           <img
                             src={post.coverImage}
                             alt={post.title}
-                            data-testid={`post-cover-${index + 1}`}
                             className="w-full h-32 object-cover rounded-lg"
                           />
                         </div>
                       )}
                       <div className="flex-1">
                         <h3
-                          data-testid={`post-title-${index + 1}`}
                           className="text-xl font-semibold text-gray-900 mb-2"
-                        >
-                          {post.title}
-                        </h3>
+                          dangerouslySetInnerHTML={{
+                            __html: highlightText(post.title, query || ''),
+                          }}
+                        />
                         <p
-                          data-testid={`post-excerpt-${index + 1}`}
                           className="text-gray-600 mb-3 line-clamp-2"
-                        >
-                          {post.excerpt || post.content.substring(0, 100)}
-                        </p>
+                          dangerouslySetInnerHTML={{
+                            __html: highlightText(
+                              post.excerpt || post.content.substring(0, 100),
+                              query || ''
+                            ),
+                          }}
+                        />
                         <div className="flex items-center text-sm text-gray-500">
-                          <span data-testid={`post-author-${index + 1}`}>
-                            {post.author.name}
-                          </span>
+                          <span>{post.author.name}</span>
                           <span className="mx-2">·</span>
-                          <time data-testid={`post-date-${index + 1}`}>
-                            {formatDate(post.publishedAt)}
-                          </time>
+                          <time>{formatDate(post.publishedAt)}</time>
                         </div>
                         {post.tags.length > 0 && (
                           <div className="mt-3 flex flex-wrap gap-2">
-                            {post.tags.map((tag) => (
+                            {post.tags.map((tagItem) => (
                               <Link
-                                key={tag.id}
-                                href={`/posts?tag=${slugifyTagName(tag.name)}`}
-                                data-testid={`post-tag-${slugifyTagName(tag.name)}`}
+                                key={tagItem.id}
+                                href={`/search?q=${query || ''}&tag=${slugifyTagName(tagItem.name)}`}
+                                data-testid={`tag-filter-${slugifyTagName(tagItem.name)}`}
                                 className="inline-block px-2 py-1 rounded-full text-xs bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
                               >
-                                {tag.name}
+                                {tagItem.name}
                               </Link>
                             ))}
                           </div>
@@ -183,15 +220,6 @@ export default async function Home({ searchParams }: HomeProps) {
               ))
             )}
           </div>
-
-          {/* ページネーション */}
-          {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              basePath="/"
-            />
-          )}
         </div>
       </main>
     </div>
