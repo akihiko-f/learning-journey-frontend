@@ -6,17 +6,16 @@
 
 ```
 learning-journey/
-├── frontend/              # フロントエンドアプリ
-│   ├── todo-app/          # ToDoアプリ（Phase 1完了）
-│   ├── timer-app/         # カウントダウンタイマー（Phase 2-1完了）
-│   ├── calculator-app/    # 簡易計算機（Phase 2-2完了）
-│   ├── favorites-app/     # お気に入りリスト（Phase 2-3完了）
-│   ├── memo-app/          # メモアプリ（Phase 3-1完了）
-│   ├── budget-app/        # 家計簿アプリ（Phase 3-2完了）
-│   ├── weather-app/       # 天気予報アプリ（Phase 3-3完了）
-│   ├── portfolio-app/     # ポートフォリオサイト（Phase 4-1完了）
-│   └── free-practice-app/ # 自由練習用アプリ
-├── backend/               # バックエンド（今後の拡張用）
+├── todo-app/              # ToDoアプリ（Phase 1完了）
+├── timer-app/             # カウントダウンタイマー（Phase 2-1完了）
+├── calculator-app/        # 簡易計算機（Phase 2-2完了）
+├── favorites-app/         # お気に入りリスト（Phase 2-3完了）
+├── memo-app/              # メモアプリ（Phase 3-1完了）
+├── budget-app/            # 家計簿アプリ（Phase 3-2完了）
+├── weather-app/           # 天気予報アプリ（Phase 3-3完了）
+├── portfolio-app/         # ポートフォリオサイト（Phase 4-1完了）
+├── free-practice-app/     # 自由練習用アプリ
+├── simple-blog/           # ブログアプリ（Next.js + Prisma）
 ├── assignments/           # お題の仕様書
 ├── learning-journey/      # 学習記録
 └── README.md
@@ -34,12 +33,12 @@ learning-journey/
 
 ```bash
 # 各アプリを起動
-cd frontend/<app-name>
+cd <app-name>
 npm install  # 初回のみ
 npm run dev
 
 # 例: 家計簿アプリを起動
-cd frontend/budget-app
+cd budget-app
 npm install  # 初回のみ
 npm run dev
 ```
